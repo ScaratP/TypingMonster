@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>打字遊戲</title>
+<style>
+body {
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  font-family: Arial, sans-serif;
+}
+.game-container {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+}
+canvas {
+  display: block;
+}
+.control-panel {
+  position: absolute;
+  top: 10px;
+  left: 200px;
+  display: flex;
+  gap: 10px;
+  z-index: 10;
+}
+.theme-panel {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  z-index: 10;
+  background: rgba(255, 255, 255, 0.8);
+  padding: 10px;
+  border-radius: 5px;
+}
+
+/* 開始按鈕樣式 */
+.start-button-container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 20;
+}
+
+#start-btn {
+  font-size: 24px;
+  padding: 15px 30px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
+}
+
+#start-btn:hover {
+  background-color: #45a049;
+  transform: scale(1.05);
+}
+
+#start-btn:active {
+  transform: scale(0.98);
+}
+
+.input-container {
+  position: absolute;
+  bottom: 60px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.arrow-hint {
+  color: #FF0000;
+  font-weight: bold;
+  animation: pulse 1.5s infinite;
+  text-shadow: 0 0 3px white;
+}
+
+@keyframes pulse {
+  0% { opacity: 0.5; }
+  50% { opacity: 1; }
+  100% { opacity: 0.5; }
+}
+
+#typing-input {
+  padding: 8px;
+  font-size: 18px;
+  width: 300px;
+}
+button {
+  padding: 8px 16px;
+  cursor: pointer;
+}
+select {
+  padding: 5px;
+  margin-top: 2px;
+}
+label {
+  font-size: 14px;
+  font-weight: bold;
+}
+</style>
+</head>
+<body>
+<div class="game-container">
+<canvas id="canvas"></canvas>
+
+<div class="control-panel">
+  <button id="pause-btn">暫停</button>
+  <button id="restart-btn">重新開始</button>
+</div>
+
+<div class="theme-panel">
+  <label for="theme-select">文字主題:</label>
+  <select id="theme-select">
+    <option value="default">預設(注音符號)</option>
+    <option value="numbers">數字</option>
+    <option value="english">英文字母</option>
+    <option value="mixed">混合</option>
+  </select>
+</div>
+
+<!-- 新增開始按鈕 -->
+<div class="start-button-container">
+  <button id="start-btn">開始遊戲</button>
+</div>
+
+<div id="input-container" class="input-container">
+  <div class="arrow-hint">↑ 請輸入紅色箭頭指向的怪物字符 ↑</div>
+  <input type="text" id="typing-input" placeholder="在這裡輸入...">
+</div>
+</div>
+
+<!-- 先加載主題配置檔案 -->
+<script src="themes.js"></script>
+<!-- 然後加載主遊戲程式碼 -->
+<script src="index.js"></script>
+</body>
+</html>

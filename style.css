@@ -3,15 +3,21 @@ body {
 	padding: 0;
 	overflow: hidden;
 	font-family: Arial, sans-serif;
+	background-color: #f5f5f5;
   }
+  
   .game-container {
 	position: relative;
 	width: 100%;
 	height: 100vh;
   }
+  
   canvas {
 	display: block;
+	background-color: #fff;
   }
+  
+  /* 控制面板樣式 */
   .control-panel {
 	position: absolute;
 	top: 10px;
@@ -20,18 +26,82 @@ body {
 	gap: 10px;
 	z-index: 10;
   }
-  .theme-panel {
+  
+  /* 設定面板樣式 */
+  .settings-panel {
 	position: absolute;
-	top: 10px;
-	right: 10px;
-	display: flex;
-	flex-direction: column;
-	gap: 5px;
+	top: 50%;
+	right: 20px;
+	transform: translateY(-50%);
+	background: rgba(255, 255, 255, 0.9);
+	padding: 20px;
+	border-radius: 10px;
+	box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
 	z-index: 10;
-	background: rgba(255, 255, 255, 0.8);
-	padding: 10px;
-	border-radius: 5px;
+	width: 250px;
+	transition: all 0.3s ease;
   }
+  
+  .settings-header {
+	font-size: 20px;
+	font-weight: bold;
+	color: #333;
+	margin-bottom: 15px;
+	text-align: center;
+	border-bottom: 2px solid #ccc;
+	padding-bottom: 8px;
+  }
+  
+  .setting-item {
+	margin: 15px 0;
+  }
+  
+  .setting-item label {
+	display: block;
+	margin-bottom: 5px;
+	font-weight: bold;
+	color: #444;
+  }
+  
+  .setting-item select {
+	width: 100%;
+	padding: 8px;
+	border-radius: 5px;
+	border: 1px solid #ccc;
+	font-size: 14px;
+  }
+  
+  /* 開始按鈕樣式 */
+  .start-button-container {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	z-index: 20;
+  }
+  
+  #start-btn {
+	font-size: 24px;
+	padding: 15px 30px;
+	background-color: #4CAF50;
+	color: white;
+	border: none;
+	border-radius: 8px;
+	cursor: pointer;
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+	transition: all 0.3s ease;
+  }
+  
+  #start-btn:hover {
+	background-color: #45a049;
+	transform: scale(1.05);
+  }
+  
+  #start-btn:active {
+	transform: scale(0.98);
+  }
+  
+  /* 輸入框容器樣式 */
   .input-container {
 	position: absolute;
 	bottom: 60px;
@@ -56,20 +126,70 @@ body {
 	50% { opacity: 1; }
 	100% { opacity: 0.5; }
   }
+  
   #typing-input {
-	padding: 8px;
+	padding: 12px;
 	font-size: 18px;
 	width: 300px;
+	border-radius: 25px;
+	border: 2px solid #4CAF50;
+	text-align: center;
+	outline: none;
+	transition: all 0.3s;
   }
+  
+  #typing-input:focus {
+	box-shadow: 0 0 8px rgba(76, 175, 80, 0.5);
+	border-color: #45a049;
+  }
+  
+  /* 通用按鈕樣式 */
   button {
 	padding: 8px 16px;
 	cursor: pointer;
+	background-color: #4e7ddb;
+	color: white;
+	border: none;
+	border-radius: 4px;
+	transition: all 0.2s;
   }
-  select {
-	padding: 5px;
-	margin-top: 2px;
+  
+  button:hover {
+	background-color: #3a67be;
   }
-  label {
-	font-size: 14px;
-	font-weight: bold;
+  
+  /* 分數和生命值區域 */
+  .stats-container {
+	position: absolute;
+	top: 10px;
+	left: 10px;
+	display: flex;
+	flex-direction: column;
+	gap: 5px;
+	z-index: 10;
+	background: rgba(255, 255, 255, 0.8);
+	padding: 10px;
+	border-radius: 5px;
+	min-width: 150px;
+  }
+  
+  .stat-item {
+	display: flex;
+	justify-content: space-between;
+  }
+  
+  /* 底部訊息欄 */
+  .bottom-bar {
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	width: 100%;
+	height: 50px;
+	background-color: #8B4513;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	color: white;
+	font-size: 20px;
+	z-index: 5;
   }

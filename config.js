@@ -4,14 +4,20 @@
  * 包含遊戲中所有可配置的選項，如文字主題、怪獸外觀、遊戲難度等
  */
 
+
+
 // 遊戲配置物件
 const GameConfig = {
     // 文字主題
+    // 在 config.js 中的 textThemes 物件中添加以下內容
+
     textThemes: {
-      default: ["ㄅ", "ㄆ", "ㄇ", "ㄈ", "ㄉ", "ㄊ", "ㄋ", "ㄌ", "ㄍ", "ㄎ", "ㄏ", "ㄐ", "ㄑ", "ㄒ", "ㄓ", "ㄔ", "ㄕ", "ㄖ", "ㄗ", "ㄘ", "ㄙ"],
+      default: ["ㄚ", "ㄧ", "ㄨ", "ㄩ", "ㄛ", "ㄜ", "ㄝ", "ㄞ", "ㄟ", "ㄠ", "ㄡ", "ㄢ", "ㄣ", "ㄤ", "ㄥ", "ㄦ", "ㄕ", "ㄖ", "ㄗ", "ㄘ", "ㄙ"],
       numbers: ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"],
       english: ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"],
-      mixed: ["a1", "b2", "c3", "d4", "e5", "f6", "g7", "h8", "i9", "j0"]
+      mixed: ["a1", "b2", "c3", "d4", "e5", "f6", "g7", "h8", "i9", "j0"],
+      // 新增複合注音主題
+      compound: ["ㄉㄚˇ", "ㄗˋ", "ㄅㄚ", "ㄘㄜˋ", "ㄇㄚˇ", "ㄇㄚ", "ㄉㄨㄥ", "ㄒㄧㄚˋ", "ㄒㄩㄝˊ", "ㄆㄧㄣˋ", "ㄧㄣ", "ㄉㄚˇㄗˋ"]
     },
   
     // 怪獸外觀設定
@@ -76,6 +82,34 @@ const GameConfig = {
       cleanupInterval: 5000, // 清理無效怪獸間隔 (毫秒)
       safeZoneTop: 60,      // 頂部安全區域
       safeZoneBottom: 120   // 底部安全區域
+    },
+
+    // 在 GameConfig 中添加
+    stats: {
+      typingSpeed: 0,          // 當前打字速度 (字符/分鐘)
+      totalCharsTyped: 0,      // 總共輸入的字符數
+      startTime: 0,            // 遊戲開始時間
+      lastUpdateTime: 0,       // 上次更新速度的時間
+      updateInterval: 2000     // 更新速度的間隔 (毫秒)
+    },
+
+    // 也添加相關方法
+    resetTypingStats() {
+      this.stats.typingSpeed = 0;
+      this.stats.totalCharsTyped = 0;
+      this.stats.startTime = Date.now();
+      this.stats.lastUpdateTime = Date.now();
+    },
+
+    updateTypingSpeed() {
+      const now = Date.now();
+      const elapsedMinutes = (now - this.stats.startTime) / 60000; // 轉換為分鐘
+      
+      if (elapsedMinutes > 0) {
+        this.stats.typingSpeed = Math.round(this.stats.totalCharsTyped / elapsedMinutes);
+      }
+      
+      this.stats.lastUpdateTime = now;
     },
     
     // 當前配置狀態

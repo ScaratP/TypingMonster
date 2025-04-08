@@ -13,6 +13,7 @@ let gameStarted = false;
 let targetMonsterIndex = -1;
 let difficultyIncreaseInterval = null;
 let cleanupInterval = null;
+let speedUpdateInterval = null;
 
 /**
  * 初始化遊戲
@@ -176,6 +177,15 @@ function startGame() {
   
   // 更新底部文字
   updateBottomText("遊戲開始！請輸入文字");
+
+  // 重置打字速度統計
+  GameConfig.resetTypingStats();
+  
+  // 開始定期更新打字速度
+  speedUpdateInterval = setInterval(() => {
+    GameConfig.updateTypingSpeed();
+  }, GameConfig.stats.updateInterval);
+  
   
   // 啟動定期清理無效怪獸的計時器
   if (cleanupInterval) {
@@ -212,7 +222,17 @@ function endGame() {
   gameStarted = false;
   isPaused = false;
   score = 0;
+
+  // 清除打字速度更新的計時器
+  if (speedUpdateInterval) {
+    clearInterval(speedUpdateInterval);
+    speedUpdateInterval = null;
+  }
   
+  // 最後更新一次打字速度以獲得最終結果
+  GameConfig.updateTypingSpeed();
+
+
   // 顯示設定面板
   showGameSettings();
   
@@ -286,6 +306,8 @@ function handleUserInput(userInput) {
     if (targetMonster.matchesInput(userInput)) {
       // 處理成功輸入
       const isCompleted = targetMonster.handleInput();
+      // 增加字符計數
+      GameConfig.stats.totalCharsTyped++;
       
       if (isCompleted) {
         // 完成整個單詞，增加分數
@@ -317,6 +339,9 @@ function handleUserInput(userInput) {
   
   // 如果沒有找到目標怪獸，或輸入不匹配，則提示用戶
   updateBottomText("提示：請輸入紅色箭頭指向的怪物字符");
+
+
+  
 }
 
 /**

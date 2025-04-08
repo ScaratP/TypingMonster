@@ -69,17 +69,21 @@ function drawStartScreen(ctx, canvasWidth, canvasHeight) {
  * @param {number} levelNumber - 當前關卡
  */
 function drawGameStats(ctx, score, themeName, difficultyName, levelNumber) {
-  // 分數顯示
+  // 分數顯示 - 增加垂直間距
   ctx.font = "20px Arial";
   ctx.fillStyle = "black";
   ctx.fillText("分數:", 50, 30);
   ctx.fillText(score, 120, 30);
   
-  // 當前設定顯示
+  // 打字速度顯示 - 確保有足夠間距
+  ctx.fillText("速度:", 50, 60); // 從30增加到60
+  ctx.fillText(`${GameConfig.stats.typingSpeed || 0} 字/分鐘`, 120, 60);
+  
+  // 當前設定顯示 - 進一步調整間距
   ctx.font = "16px Arial";
-  ctx.fillText(`主題: ${getThemeDisplayName(themeName)}`, 50, 60);
-  ctx.fillText(`難度: ${getDifficultyDisplayName(difficultyName)}`, 50, 85);
-  ctx.fillText(`關卡: ${levelNumber}`, 50, 110);
+  ctx.fillText(`主題: ${getThemeDisplayName(themeName)}`, 50, 90); // 從60增加到90
+  ctx.fillText(`難度: ${getDifficultyDisplayName(difficultyName)}`, 50, 115); // 從85增加到115
+  ctx.fillText(`關卡: ${levelNumber}`, 50, 140); // 從110增加到140
   
   // 遊戲標題
   ctx.font = "40px Arial";
@@ -97,7 +101,8 @@ function getThemeDisplayName(themeName) {
     'default': '注音符號',
     'numbers': '數字',
     'english': '英文字母',
-    'mixed': '混合'
+    'mixed': '混合',
+    'compound': '複合注音'
   };
   return displayNames[themeName] || themeName;
 }
@@ -187,8 +192,9 @@ function hideInputContainer() {
  * @param {number} finalScore - 最終分數
  */
 function showGameOver(finalScore) {
-  updateBottomText(`遊戲結束！最終分數: ${finalScore}`);
+  const finalSpeed = GameConfig.stats.typingSpeed;
+  updateBottomText(`遊戲結束！最終分數: ${finalScore} | 打字速度: ${finalSpeed} 字/分鐘`);
   setTimeout(() => {
-    alert(`遊戲結束！\n您的最終分數是: ${finalScore}`);
+    alert(`遊戲結束！\n您的最終分數是: ${finalScore}\n您的打字速度是: ${finalSpeed} 字/分鐘`);
   }, 100);
 }

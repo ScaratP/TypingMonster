@@ -9,6 +9,80 @@ let monsterImageCache = {};
 // 定義全域變數來保存最後一次顯示的目標怪物索引
 let lastDisplayedTargetIndex = -1;
 
+// 添加一個輸入映射表，處理常見的問題字符
+const inputMapping = {
+  '3': 'ˇ',  // 數字3對應第三聲
+  '4': 'ˋ',  // 數字4對應第四聲
+  '6': 'ˊ',  // 數字6對應第二聲
+  '7': '˙',
+  '1': 'ㄅ',
+  'q': 'ㄆ',
+  'a': 'ㄇ',
+  'z': 'ㄈ',
+  '2': 'ㄉ',
+  'w': 'ㄊ',
+  's': 'ㄋ',
+  'x': 'ㄌ',
+  'e': 'ㄍ',
+  'd': 'ㄎ',
+  'c': 'ㄏ',
+  'r': 'ㄐ',
+  'f': 'ㄑ',
+  'v': 'ㄒ',
+  '5': 'ㄓ',  
+  't': 'ㄔ',
+  'g': 'ㄕ',
+  'b': 'ㄖ',
+  'y': 'ㄗ',
+  'h': 'ㄘ',
+  'n': 'ㄙ',
+  'u': 'ㄧ',
+  'j': 'ㄨ',
+  'm': 'ㄩ',
+  '8': 'ㄚ',
+  'i': 'ㄛ',
+  'k': 'ㄜ',
+  ',': 'ㄝ',
+  '9': 'ㄞ',
+  'o': 'ㄟ',
+  'l': 'ㄠ',
+  '.': 'ㄡ',
+  '0': 'ㄢ',
+  'p': 'ㄣ',
+  ';': 'ㄤ',
+  '/': 'ㄥ',
+  '-': 'ㄦ',
+
+  'Q': 'ㄆ',
+  'A': 'ㄇ',
+  'Z': 'ㄈ',
+  'W': 'ㄊ',
+  'S': 'ㄋ',
+  'X': 'ㄌ',
+  'E': 'ㄍ',
+  'D': 'ㄎ',
+  'C': 'ㄏ',
+  'R': 'ㄐ',
+  'F': 'ㄑ',
+  'V': 'ㄒ',
+  'T': 'ㄔ',
+  'G': 'ㄕ',
+  'B': 'ㄖ',
+  'Y': 'ㄗ',
+  'H': 'ㄘ',
+  'N': 'ㄙ',
+  'U': 'ㄧ',
+  'J': 'ㄨ',
+  'M': 'ㄩ',
+  'I': 'ㄛ',
+  'K': 'ㄜ',
+  'O': 'ㄟ',
+  'L': 'ㄠ',
+  'P': 'ㄣ'
+  
+};
+
+
 /**
  * 預載入怪獸圖片
  */
@@ -250,14 +324,19 @@ class Monster {
   }
   
   /**
-   * 檢查是否匹配輸入
-   * @param {string} userInput - 用戶輸入
-   * @returns {boolean} - 是否匹配
-   */
+ * 檢查是否匹配輸入
+ * @param {string} userInput - 用戶輸入
+ * @returns {boolean} - 是否匹配
+ */
   matchesInput(userInput) {
     if (this.text.length === 0) return false;
     
     const firstChar = this.text.charAt(0);
+    
+    // 檢查輸入映射 (先檢查這個)
+    if (inputMapping[userInput] === firstChar) {
+      return true;
+    }
     
     // 直接匹配
     if (firstChar === userInput) return true;
@@ -272,8 +351,8 @@ class Monster {
       }
     }
     
-    // 特殊處理：如果是混合主題，允許只輸入第一個字符
-    if (currentThemeName === "mixed" && firstChar.length > 1) {
+    // 特殊處理：如果是混合主題或複合注音主題，允許只輸入第一個字符
+    if ((currentThemeName === "mixed" || currentThemeName === "compound") && firstChar.length > 1) {
       if (firstChar.charAt(0) === userInput) {
         return true;
       }
@@ -294,4 +373,60 @@ class Monster {
     // 返回是否完成全部輸入
     return this.text.length === 0;
   }
+}
+
+/**
+ * 處理使用者輸入
+ * @param {string} userInput - 使用者輸入
+ */
+function handleUserInput(userInput) {
+  // 如果遊戲未開始或已暫停，不處理輸入
+  if (!gameStarted || isPaused) return;
+  
+  // 更新目標怪獸
+  targetMonsterIndex = findTargetMonster(monsters);
+  
+  // 優先檢查目標怪獸
+  if (targetMonsterIndex !== -1 && monsters[targetMonsterIndex].active) {
+    const targetMonster = monsters[targetMonsterIndex];
+    
+    // 檢查目標怪獸是否匹配輸入
+    if (targetMonster.matchesInput(userInput)) {
+      // 處理成功輸入
+      const isCompleted = targetMonster.handleInput();
+      
+      if (isCompleted) {
+        // 完成整個單詞，增加分數
+        score += Math.ceil(1 * GameConfig.getScoreFactor());
+        
+        // 銷毀怪獸
+        targetMonster.destroy();
+        
+        // 將怪獸重置到頂部（重複利用物件）
+        setTimeout(() => {
+          const newText = GameConfig.getCurrentTextTheme()[Math.floor(Math.random() * GameConfig.getCurrentTextTheme().length)];
+          targetMonster.reset(-10 - Math.random() * 50, newText);
+        }, 1000);
+        
+        // 更新底部文字顯示當前得分
+        updateBottomText(`得分: ${score}`);
+      } else {
+        // 複合注音特殊處理
+        if (GameConfig.current.textTheme === "compound") {
+          updateBottomText("正確輸入！繼續輸入剩餘字符...");
+        } else {
+          updateBottomText("正確輸入！繼續...");
+        }
+      }
+      
+      return;
+    } else {
+      // 如果輸入不匹配目標怪獸，提示
+      updateBottomText("提示：請輸入紅色箭頭指向的怪物字符");
+      return;
+    }
+  }
+  
+  // 如果沒有找到目標怪獸，或輸入不匹配，則提示用戶
+  updateBottomText("提示：請輸入紅色箭頭指向的怪物字符");
 }

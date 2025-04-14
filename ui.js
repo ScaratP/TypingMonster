@@ -86,7 +86,7 @@ function drawGameStats(ctx, score, themeName, levelNumber) {
   // 遊戲標題
   ctx.font = "40px Arial";
   ctx.strokeStyle = "lightgrey";
-  ctx.strokeText("ㄉㄚˇㄗˋ", 10, 40);
+  // ctx.strokeText("ㄉㄚˇㄗˋ", 10, 40);
 }
 
 /**

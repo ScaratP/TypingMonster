@@ -2,9 +2,10 @@
 <html lang="zh-TW">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>打字遊戲</title>
 <link rel="stylesheet" href="style.css">
+<link rel="icon" href="favicon.ico" type="image/x-icon">
 </head>
 <body>
 <div class="game-container">
@@ -14,6 +15,7 @@
   <div class="control-panel">
     <button id="pause-btn">暫停</button>
     <button id="restart-btn">重新開始</button>
+    <button id="achievements-btn">成就</button>
   </div>
 
   <!-- 遊戲設定面板 (只在遊戲開始前顯示) -->
@@ -23,24 +25,30 @@
     <!-- 文字主題選擇 -->
     <div class="setting-item">
       <label for="theme-select">文字主題:</label>
-      <select id="theme-select">
-        <option value="default">預設(注音符號)</option>
-        <option value="numbers">數字</option>
-        <option value="english">英文字母</option>
-        <option value="mixed">混合</option>
-        <option value="compound">複合注音</option>
-      </select>
+      <select id="theme-select"></select>
     </div>
     
     <!-- 關卡選擇 (已整合難度) -->
     <div class="setting-item">
       <label for="level-select">關卡:</label>
-      <select id="level-select">
-        <option value="1" selected>關卡 1 - 入門</option>
-        <option value="2">關卡 2 - 基礎</option>
-        <option value="3">關卡 3 - 進階</option>
-        <option value="4">關卡 4 - 專家</option>
-        <option value="5">關卡 5 - 大師</option>
+      <select id="level-select"></select>
+    </div>
+    
+    <!-- 音效設定 -->
+    <div class="setting-item">
+      <label for="sound-select">音效:</label>
+      <select id="sound-select">
+        <option value="on" selected>開啟</option>
+        <option value="off">關閉</option>
+      </select>
+    </div>
+    
+    <!-- 音樂設定 -->
+    <div class="setting-item">
+      <label for="music-select">背景音樂:</label>
+      <select id="music-select">
+        <option value="on" selected>開啟</option>
+        <option value="off">關閉</option>
       </select>
     </div>
   </div>
@@ -55,12 +63,55 @@
     <div class="arrow-hint">↑ 請輸入紅色箭頭指向的怪物字符 ↑</div>
     <input type="text" id="typing-input" placeholder="在這裡輸入...">
   </div>
+  
+  <!-- 統計資訊區域 -->
+  <!-- <div class="stats-container">
+    <div class="stat-item"><span>分數:</span> <span id="score-value">0</span></div>
+    <div class="stat-item"><span>速度:</span> <span id="speed-value">0 字/分鐘</span></div>
+    <div class="stat-item"><span>主題:</span> <span id="theme-value">注音符號</span></div>
+    <div class="stat-item"><span>關卡:</span> <span id="level-value">1 - 入門</span></div>
+    <div class="stat-item"><span>連擊:</span> <span id="combo-value">0</span></div>
+  </div> -->
+  
+  <!-- 底部訊息欄 -->
+  <div class="bottom-bar" id="bottom-bar"></div>
 </div>
 
-<!-- 載入順序很重要: 配置 -> 怪獸 -> UI -> 遊戲主邏輯 -->
+<!-- 載入順序很重要 -->
 <script src="config.js"></script>
+<script src="audio.js"></script>
+<script src="achievements.js"></script>
 <script src="monsters.js"></script>
 <script src="ui.js"></script>
-<script src="game.js"></script>
+<script src="touch-support.js"></script>
+<script src="main.js"></script>
+
+<!-- 初始化遊戲腳本 -->
+<script>
+// 確保頁面完全載入後初始化
+document.addEventListener('DOMContentLoaded', function() {
+  // 初始化音效系統
+  if (typeof GameAudio !== 'undefined') {
+    GameAudio.init();
+  }
+  
+  // 初始化成就系統
+  if (typeof AchievementSystem !== 'undefined') {
+    AchievementSystem.init();
+    
+    // 綁定成就按鈕點擊事件
+    document.getElementById('achievements-btn').addEventListener('click', function() {
+      if (typeof AchievementSystem !== 'undefined') {
+        AchievementSystem.showAchievementPanel();
+  }
+    });
+  }
+  
+  // 初始化觸控支援
+  if (typeof initTouchSupport !== 'undefined') {
+    initTouchSupport();
+  }
+});
+</script>
 </body>
 </html>

@@ -154,7 +154,7 @@ function createInitialMonsters(canvasWidth, canvasHeight) {
   
   const monsterSize = currentLevel.size; // 從關卡設定獲取大小
   const monsterCount = currentLevel.count; // 從關卡設定獲取數量
-  const baseSpeed = currentLevel.speed * GameConfig.getCurrentDifficulty().speedMultiplier; // 計算實際速度
+  const baseSpeed = currentLevel.speed; // 直接使用關卡設定的速度
   
   // 設定怪獸安全區域
   const safeMargin = monsterSize * 2; // 安全邊距為怪獸直徑

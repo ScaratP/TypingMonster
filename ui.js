@@ -65,10 +65,9 @@ function drawStartScreen(ctx, canvasWidth, canvasHeight) {
  * @param {CanvasRenderingContext2D} ctx - Canvas的2D渲染上下文
  * @param {number} score - 當前分數
  * @param {string} themeName - 當前主題名稱
- * @param {string} difficultyName - 當前難度名稱
  * @param {number} levelNumber - 當前關卡
  */
-function drawGameStats(ctx, score, themeName, difficultyName, levelNumber) {
+function drawGameStats(ctx, score, themeName, levelNumber) {
   // 分數顯示 - 增加垂直間距
   ctx.font = "20px Arial";
   ctx.fillStyle = "black";
@@ -82,13 +81,44 @@ function drawGameStats(ctx, score, themeName, difficultyName, levelNumber) {
   // 當前設定顯示 - 進一步調整間距
   ctx.font = "16px Arial";
   ctx.fillText(`主題: ${getThemeDisplayName(themeName)}`, 50, 90); // 從60增加到90
-  ctx.fillText(`難度: ${getDifficultyDisplayName(difficultyName)}`, 50, 115); // 從85增加到115
-  ctx.fillText(`關卡: ${levelNumber}`, 50, 140); // 從110增加到140
+  ctx.fillText(`關卡: ${levelNumber} - ${getLevelDisplayName(levelNumber)}`, 50, 115); // 從85增加到115
   
   // 遊戲標題
   ctx.font = "40px Arial";
   ctx.strokeStyle = "lightgrey";
   ctx.strokeText("ㄉㄚˇㄗˋ", 10, 40);
+}
+
+/**
+ * 獲取主題顯示名稱
+ * @param {string} themeName - 主題名稱
+ * @returns {string} - 顯示名稱
+ */
+function getThemeDisplayName(themeName) {
+  const displayNames = {
+    'default': '注音符號',
+    'numbers': '數字',
+    'english': '英文字母',
+    'mixed': '混合',
+    'compound': '複合注音'
+  };
+  return displayNames[themeName] || themeName;
+}
+
+/**
+ * 獲取關卡顯示名稱
+ * @param {number} levelNumber - 關卡編號
+ * @returns {string} - 顯示名稱
+ */
+function getLevelDisplayName(levelNumber) {
+  const displayNames = {
+    1: '入門',
+    2: '基礎',
+    3: '進階',
+    4: '專家',
+    5: '大師'
+  };
+  return displayNames[levelNumber] || `關卡 ${levelNumber}`;
 }
 
 /**
